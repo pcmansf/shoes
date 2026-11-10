@@ -5,12 +5,16 @@ const reject=(message,status,headers={})=>new Response(message,{
   status,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store',...headers}
 });
 
-export function createAccessPolicy({host='127.0.0.1',port=5173,origins=[],username='',password=''}={}) {
+export function createAccessPolicy({host='127.0.0.1',port=5173,origins=[],username='',password='',requireLogin=true}={}) {
   const local=['127.0.0.1','::1','localhost'].includes(host);
+  if(typeof requireLogin!=='boolean')throw new Error('Require login must be true or false.');
   if(!Number.isInteger(port)||port<0||port>65535)throw new Error('SHOES_PORT must be a valid port.');
-  if((username&&!password)||(!username&&password))throw new Error('Set both SHOES_USERNAME and SHOES_PASSWORD.');
-  if(username.includes(':')||/[\r\n]/.test(username+password))throw new Error('Invalid login configuration.');
-  if(!local&&(!username||password.length<16))throw new Error('Network hosting requires a username and a password of at least 16 characters.');
+  if(requireLogin){
+    if(typeof username!=='string'||typeof password!=='string')throw new Error('Username and password must be text.');
+    if((username&&!password)||(!username&&password))throw new Error('Set both SHOES_USERNAME and SHOES_PASSWORD.');
+    if(username.includes(':')||/[\r\n]/.test(username+password))throw new Error('Invalid login configuration.');
+    if(!local&&(!username||password.length<8))throw new Error('Network hosting requires a username and a password of at least 8 characters.');
+  }
   if(!local&&!origins.length)throw new Error('Network hosting requires SHOES_ORIGINS, such as http://raspberrypi.local:3000.');
   const allowed=new Map();
   for(const text of origins){
@@ -19,7 +23,7 @@ export function createAccessPolicy({host='127.0.0.1',port=5173,origins=[],userna
     if(allowed.has(url.host)&&allowed.get(url.host)!==url.origin)throw new Error('Each hostname must have a single configured scheme.');
     allowed.set(url.host,url.origin);
   }
-  const credential=username?digest(username+':'+password):null;
+  const credential=requireLogin&&username?digest(username+':'+password):null;
   return {
     local,
     check(request,actualPort=port){

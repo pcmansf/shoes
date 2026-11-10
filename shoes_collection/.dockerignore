@@ -1,0 +1,9 @@
+**/data
+**/photos
+**/*.sqlite*
+**/*backup*.json
+node_modules
+.git
+tests
+*test.mjs
+*.md

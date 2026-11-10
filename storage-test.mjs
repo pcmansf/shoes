@@ -1,3 +1,4 @@
+import {seedTestCollection} from './tests/fixture-collection.mjs';
 import assert from 'node:assert/strict';
 import {mkdtemp,rm} from 'node:fs/promises';
 import path from 'node:path';
@@ -8,6 +9,7 @@ import {savePair} from './ui/save-pair.js';
 import {storageStatusOf,filterCollection} from './ui/storage-status.js';
 const directory=await mkdtemp(path.join(os.tmpdir(),'shoes-storage-test-'));
 let app=await createEnvironment({dataDirectory:directory});
+seedTestCollection(app);
 const policy=createAccessPolicy();
 async function request(route,method='GET',body,headers={}){
   const response=await handleServerRequest(new Request('http://localhost:5173/api'+route,{method,headers:{Origin:'http://localhost:5173',...headers},body:body===undefined?undefined:Buffer.isBuffer(body)?body:JSON.stringify(body)}),app,policy,5173);

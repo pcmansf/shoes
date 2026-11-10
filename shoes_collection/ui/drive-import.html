@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Choose from Google Drive — Shoes</title><link rel="stylesheet" href="/drive-style.css"></head>
+<body>
+<main class="drive-page">
+  <a class="drive-brand" href="#" id="closeTop">shoes’</a>
+  <p class="eyebrow">YOUR PHOTOS, YOUR COLLECTION</p>
+  <h1>Choose from Google Drive.</h1>
+  <p>Sign in to browse your private files and select one shoe or box photo. The selected photo will be copied into your shoe collection.</p>
+  <div id="driveStatus" class="status" role="status">Checking your Drive connection…</div>
+  <button type="button" id="chooseDrive" disabled>Sign in &amp; choose a photo</button>
+  <button type="button" id="cancelDrive" class="secondary">Cancel</button>
+  <div id="setupNotice" class="notice" hidden><strong>One-time setup is needed.</strong><p>Connect this app to your own Google Cloud project before opening private Drive files.</p><a href="/drive-setup.html" target="_blank" rel="noopener">Open setup instructions</a></div>
+  <div id="originNotice" class="notice" hidden><strong>This address cannot use Google sign-in.</strong><p>For Windows testing, open the shoe app at <a href="http://localhost:5173" target="_blank" rel="noopener">http://localhost:5173</a>. On your Pi, use an approved HTTPS address or a localhost SSH tunnel. Register the exact address in your Google app settings.</p></div>
+  <p class="small">Only the selected image is imported. Google sign-in tokens stay in this window’s memory and are discarded when it closes. Your original Drive file is unchanged.</p>
+</main>
+<script type="module" src="/drive-popup.js"></script>
+</body></html>

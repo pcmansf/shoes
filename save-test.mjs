@@ -1,3 +1,4 @@
+import {seedTestCollection} from './tests/fixture-collection.mjs';
 import assert from 'node:assert/strict';
 import {mkdtemp,rm} from 'node:fs/promises';
 import os from 'node:os';
@@ -8,6 +9,7 @@ import {savePair} from './ui/save-pair.js';
 
 const directory=await mkdtemp(path.join(os.tmpdir(),'shoes-save-test-'));
 let runtime=await createEnvironment({dataDirectory:directory});
+seedTestCollection(runtime);
 const policy=createAccessPolicy();
 const calls=[];
 async function api(route,options={}){

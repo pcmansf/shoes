@@ -54,7 +54,7 @@ Read the login or edit configuration:
 
     sudo nano /etc/shoes.env
 
-Restart the service after changing settings. Keep the password at least 16 characters long. The default username is shoes.
+Restart the service after changing settings. Keep the password at least 8 characters long. The default username is shoes.
 
 If the Pi's IP address changes, add its new origin to the comma-separated SHOES_ORIGINS value and restart. Each origin must include its scheme and port, for example http://192.168.1.50:3000. The hostname.local address can continue to work without editing the IP. A DHCP reservation on your router avoids changing addresses.
 

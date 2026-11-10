@@ -1,3 +1,4 @@
+import {seedTestCollection} from './tests/fixture-collection.mjs';
 import assert from 'node:assert/strict';
 import {mkdtemp,rm} from 'node:fs/promises';
 import path from 'node:path';
@@ -7,6 +8,7 @@ import {handle} from './src/worker.js';
 
 const directory=await mkdtemp(path.join(os.tmpdir(),'shoes-locations-test-'));
 let app=await createEnvironment({dataDirectory:directory});
+seedTestCollection(app);
 async function request(route,method='GET',body,owner='local-owner'){
   const response=await handle(new Request('http://localhost/api'+route,{
     method,headers:{Origin:'http://localhost','oai-authenticated-user-id':owner},

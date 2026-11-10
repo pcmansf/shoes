@@ -62,10 +62,10 @@ export async function handleServerRequest(request,runtime,policy,actualPort){
 }
 
 export async function createServer({
-  port=5173,host='127.0.0.1',origins=[],username='',password='',
+  port=5173,host='127.0.0.1',origins=[],username='',password='',requireLogin=true,
   dataDirectory=path.join(root,'data')
 }={}){
-  const policy=createAccessPolicy({host,port,origins,username,password});
+  const policy=createAccessPolicy({host,port,origins,username,password,requireLogin});
   const runtime=await createEnvironment({dataDirectory,mode:policy.local?'local':'server'});
   const send=async(res,response)=>{
     res.writeHead(response.status,Object.fromEntries(response.headers));

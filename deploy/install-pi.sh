@@ -16,6 +16,7 @@ case "$(uname -m)" in
   *) echo "Use 64-bit Raspberry Pi OS. This installer does not support a 32-bit OS." >&2; exit 1 ;;
 esac
 source_root=$(cd -- "$(dirname -- "$0")/.." && pwd)
+test -f "$source_root/tests/fixture-collection.mjs" || { echo "Missing test fixture: tests/fixture-collection.mjs" >&2; exit 1; }
 for required in server.mjs package.json test.mjs server-test.mjs drive-test.mjs save-test.mjs photo-test.mjs collection-test.mjs locations-test.mjs editor-test.mjs interactions-test.mjs location-icons-test.mjs confirmations-test.mjs storage-test.mjs ui/storage-status.js ui/action-confirmations.js LUCIDE-LICENSE.txt ui/dialog-interactions.js ui/location-icons.js src/locations.js ui/editor-guard.js src/worker.js src/server-access.js src/drive-config.js src/photo-cleanup.js ui/index.html ui/save-pair.js ui/photo-zoom.js ui/seasons.js drizzle/0000_shoe_collection.sql; do
   test -f "$source_root/$required" || { echo "Missing app file: $required" >&2; exit 1; }
 done
@@ -45,7 +46,8 @@ if ! id shoes >/dev/null 2>&1; then
   useradd --system --home-dir /var/lib/shoes --shell /usr/sbin/nologin shoes
 fi
 if systemctl is-active --quiet shoes.service; then systemctl stop shoes.service; fi
-install -d -m 755 /opt/shoes /opt/shoes/src /opt/shoes/ui /opt/shoes/drizzle
+install -d -m 755 /opt/shoes /opt/shoes/src /opt/shoes/ui /opt/shoes/drizzle /opt/shoes/tests
+install -m 644 "$source_root/tests/fixture-collection.mjs" /opt/shoes/tests/
 install -m 644 "$source_root/server.mjs" "$source_root/package.json" "$source_root/test.mjs" "$source_root/server-test.mjs" "$source_root/drive-test.mjs" "$source_root/save-test.mjs" "$source_root/photo-test.mjs" "$source_root/collection-test.mjs" "$source_root/locations-test.mjs" "$source_root/editor-test.mjs" "$source_root/interactions-test.mjs" "$source_root/location-icons-test.mjs" "$source_root/confirmations-test.mjs" "$source_root/storage-test.mjs" "$source_root/LUCIDE-LICENSE.txt" /opt/shoes/
 install -m 644 "$source_root"/src/*.js /opt/shoes/src/
 install -m 644 "$source_root"/ui/* /opt/shoes/ui/

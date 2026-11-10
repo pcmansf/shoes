@@ -1,3 +1,4 @@
+import {seedTestCollection} from './tests/fixture-collection.mjs';
 import assert from 'node:assert/strict';
 import {mkdtemp,rm} from 'node:fs/promises';
 import path from 'node:path';
@@ -6,6 +7,7 @@ import {createEnvironment} from './server.mjs';
 import {handle} from './src/worker.js';
 const directory=await mkdtemp(path.join(os.tmpdir(),'shoes-test-'));
 let app=await createEnvironment({dataDirectory:directory});
+seedTestCollection(app);
 async function fetchLocal(url,options={}){const {method='GET',body,headers={}}=options;return handle(new Request('http://localhost:5173'+url,{method,headers:{'oai-authenticated-user-id':'local-owner',...headers},body}),app.env,app.assets)}
 async function req(url,method='GET',body,headers={}){const r=await fetchLocal(url,{method,headers:{...(typeof body==='string'?{'Content-Type':'application/json'}:{}),...headers},body});return {status:r.status,body:await r.json()}}
 try{

@@ -2,7 +2,13 @@
 
 Open **Add a pair** or **Edit pair**, then use **Choose from Google Drive** below either the shoe photo or the box photo. Sign in, choose one image, and click **Save pair** in the shoe editor.
 
-The Google connection needs the one-time configuration below before it will work. No credentials are included in this ZIP. You can test locally on Windows before moving to your Raspberry Pi.
+The Google connection needs the one-time configuration below before it will work. No credentials are included in this repository. You can test locally on Windows before moving to your Raspberry Pi.
+
+## Home Assistant app
+
+Complete the Google project setup below, then enter your client ID, API key, and project number in **Shoes Collection → Configuration** using the three optional Google settings. Save and restart Shoes. Do not follow the `/var/lib/shoes`, systemd, or SSH instructions below on Home Assistant OS; those apply to Raspberry Pi OS.
+
+For Google sign-in from phones or other computers, use an approved HTTPS origin, register it with Google, and add it to the app's **Allowed addresses** setting. The app stores imported photos in `/data/shoes/photos/`. Ordinary file uploads and backups work without Google configuration.
 
 ## 1. Create your Google app
 

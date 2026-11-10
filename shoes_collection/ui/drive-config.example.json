@@ -1,0 +1,5 @@
+{
+  "clientId": "YOUR_WEB_CLIENT_ID.apps.googleusercontent.com",
+  "apiKey": "YOUR_GOOGLE_API_KEY",
+  "appId": "YOUR_NUMERIC_GOOGLE_CLOUD_PROJECT_NUMBER"
+}

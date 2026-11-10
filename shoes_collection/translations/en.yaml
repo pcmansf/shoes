@@ -1,0 +1,24 @@
+configuration:
+  require_login:
+    name: Require login
+    description: On by default. Turn off to open Shoes without a password. Anyone who can reach the app can then view and edit your collection. Save and restart Shoes to apply.
+  username:
+    name: Username
+    description: The separate login for your shoe collection.
+  password:
+    name: Password
+    description: Required when Require login is on; choose at least 8 characters. Can be left unset when login is off. Save and restart Shoes after changes.
+  origins:
+    name: Allowed addresses
+    description: Full addresses used to open Shoes, including http or https and the port. No page paths.
+  google_client_id:
+    name: Google OAuth client ID (optional)
+    description: Only for Google Drive import. Network use requires HTTPS.
+  google_api_key:
+    name: Google browser API key (optional)
+    description: Only for Google Drive import; restrict the key to your app's HTTPS origin.
+  google_app_id:
+    name: Google project number (optional)
+    description: Numeric project number for Google Picker.
+network:
+  8099/tcp: Shoe collection web page

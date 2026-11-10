@@ -18,7 +18,7 @@ async function send(url,options={}){
 }
 try{
   assert.throws(()=>createAccessPolicy({host:'0.0.0.0'}),/password/);
-  assert.throws(()=>createAccessPolicy({...settings,password:'short'}),/16 characters/);
+  assert.throws(()=>createAccessPolicy({...settings,password:'short'}),/8 characters/);
   assert.throws(()=>createAccessPolicy({...settings,origins:[]}),/ORIGINS/);
   assert.throws(()=>createAccessPolicy({...settings,origins:['https://shoes.example/path']}),/origins/);
   const noLogin=await send('http://raspberrypi.local:3000/');
@@ -30,7 +30,7 @@ try{
   assert.equal((await send('http://192.168.1.5:3000/',{headers:{authorization}})).status,200);
   const listing=await (await send('http://raspberrypi.local:3000/api/shoes',{headers:{authorization}})).json();
   assert.equal(listing.mode,'server');
-  assert.equal(listing.shoes.length,14);
+  assert.equal(listing.shoes.length,0);
   // An HTTPS reverse proxy may connect to the Node server using HTTP.
   const record={shoeId:'99',name:'Pi test pair',category:'Sneakers',reviewed:true};
   const response=await send('http://shoes.example/api/shoes',{
