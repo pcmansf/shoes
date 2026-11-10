@@ -1,0 +1,15 @@
+{
+  "name": "shoes-collection",
+  "version": "1.6.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "build": "node build.mjs",
+    "test": "node test.mjs && node server-test.mjs && node drive-test.mjs && node save-test.mjs && node photo-test.mjs && node collection-test.mjs && node locations-test.mjs && node editor-test.mjs && node interactions-test.mjs && node location-icons-test.mjs && node confirmations-test.mjs && node storage-test.mjs"
+  }
+}

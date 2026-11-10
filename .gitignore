@@ -1,0 +1,29 @@
+# Private collection data and exports, at any depth.
+data/
+photos/
+uploads/
+backups/
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+shoes-backup*.json
+google-drive.json
+options.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local runtime/build output.
+node_modules/
+dist/
+coverage/
+*.log
+*.zip
+*.tar
+*.tar.gz
+work/
+.DS_Store
+Thumbs.db

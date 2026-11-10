@@ -1,0 +1,26 @@
+[Unit]
+Description=Shoes collection web app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=shoes
+Group=shoes
+WorkingDirectory=/opt/shoes
+EnvironmentFile=/etc/shoes.env
+ExecStart=/opt/shoes-node/bin/node /opt/shoes/server.mjs
+Restart=on-failure
+RestartSec=3
+StateDirectory=shoes
+StateDirectoryMode=0700
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/shoes
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

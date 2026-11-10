@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import {attachEditorGuard} from './ui/editor-guard.js';
+class Dialog extends EventTarget{
+  open=true;
+  close(){this.open=false;this.dispatchEvent(new Event('close'));}
+}
+const dialog=new Dialog(),windowTarget=new EventTarget();
+let state={name:'Boots',location:'Bedroom',reviewed:false,shoePhoto:{url:'/original',crop:[0,0,100,200]},boxPhoto:null};
+let busy=false,answer=false,prompts=0,closes=0;
+dialog.addEventListener('close',()=>closes++);
+const guard=attachEditorGuard(dialog,{windowTarget,readState:()=>state,isBusy:()=>busy,confirmDiscard:()=>{prompts++;return answer;}});
+guard.reset();
+assert.equal(guard.dirty(),false);
+assert.equal(guard.requestClose(),true);assert.equal(prompts,0);assert.equal(closes,1);
+dialog.open=true;guard.reset();state.name='Edited';
+assert.equal(guard.requestClose(),false);assert(dialog.open);assert.equal(closes,1);assert.equal(prompts,1);
+const cancel=new Event('cancel',{cancelable:true});dialog.dispatchEvent(cancel);
+assert(cancel.defaultPrevented);assert(dialog.open);assert.equal(prompts,2);
+const unload=new Event('beforeunload',{cancelable:true});windowTarget.dispatchEvent(unload);assert(unload.defaultPrevented);
+state.name='Boots';assert(!guard.dirty());
+let cleanUnload=new Event('beforeunload',{cancelable:true});windowTarget.dispatchEvent(cleanUnload);assert(!cleanUnload.defaultPrevented);
+state.shoePhoto.crop[0]=10;assert(guard.dirty());state.shoePhoto.crop[0]=0;assert(!guard.dirty());
+state.shoePhoto={url:'/replacement'};assert(guard.dirty());
+answer=true;assert(guard.requestClose());assert.equal(closes,2);
+dialog.open=true;guard.reset();state.boxPhoto={url:'/new-box'};answer=false;
+assert(!guard.requestClose());assert(dialog.open);assert.equal(state.boxPhoto.url,'/new-box');
+const promptsBeforeSave=prompts;guard.savedClose();assert(!dialog.open);assert.equal(prompts,promptsBeforeSave);
+dialog.open=true;guard.reset();state.location='Closet';guard.renameLocation('Bedroom','Closet');assert(!guard.dirty());
+state.name='Unsaved';guard.renameLocation('Closet','Hall');state.location='Hall';assert(guard.dirty());assert.equal(state.name,'Unsaved');
+busy=true;answer=true;const promptsBeforeBusy=prompts;assert(!guard.requestClose());assert.equal(prompts,promptsBeforeBusy);
+const busyUnload=new Event('beforeunload',{cancelable:true});windowTarget.dispatchEvent(busyUnload);assert(busyUnload.defaultPrevented);
+busy=false;guard.savedClose();
+dialog.open=true;
+state={newName:'',newIcon:'pin',rows:[{id:'a',name:'Bedroom',icon:'bedroom'},{id:'b',name:'Garage',icon:'garage'}]};guard.reset();
+state.rows[0].name='Bedroom draft';state.rows[1].icon='car';
+guard.reset({newName:'',newIcon:'pin',rows:[{id:'a',name:'Bedroom',icon:'bedroom'},{id:'b',name:'Garage',icon:'car'}]});
+assert(guard.dirty(),'saving one location must leave another draft dirty');
+answer=false;assert(!guard.requestClose());assert.equal(state.rows[0].name,'Bedroom draft');
+state.rows[0].name='Bedroom';assert(!guard.dirty());state.newName='New place';assert(guard.dirty());
+state.newName='';state.newIcon='living-room-tv';assert(guard.dirty());state.newIcon='pin';assert(!guard.dirty());guard.requestClose();
+console.log('PASS: unchanged/reverted edits close freely; changed fields/photos/crops prompt; Cancel preserves edits; Escape and navigation are guarded; successful save skips the prompt; renaming locations preserves other unsaved changes.');

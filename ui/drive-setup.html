@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Google Drive setup — Shoes</title><link rel="stylesheet" href="/drive-style.css"></head>
+<body><main class="drive-page"><a href="/" class="drive-brand">shoes’</a><p class="eyebrow">ONE-TIME CONNECTION</p><h1>Connect your Google Drive.</h1><p>This connects your own Google account to the private file picker. Selected photos are copied into your collection. The app does not edit or change sharing on your Drive files.</p>
+<ol>
+<li>In <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">Google Cloud Console</a>, create or select a project. Enable <strong>Google Drive API</strong> and <strong>Google Picker API</strong>.</li>
+<li>Configure Google Auth Platform branding and audience. For personal testing, keep the app in Testing and add your Google email as a test user. Add the scope <code>https://www.googleapis.com/auth/drive.file</code>.</li>
+<li>Create an OAuth client with type <strong>Web application</strong>. For Windows, add <code>http://localhost</code>, <code>http://localhost:5173</code>, <code>http://127.0.0.1</code> and <code>http://127.0.0.1:5173</code> to Authorized JavaScript origins.</li>
+<li>Create an API key in the same project. Restrict it to Google Picker API and Google Drive API. For website restrictions, allow <code>http://localhost:5173/*</code>, <code>http://127.0.0.1:5173/*</code>, your eventual HTTPS app address, and <code>https://docs.google.com/*</code>.</li>
+<li>Copy the Web OAuth client ID, the API key, and the project's <strong>numeric project number</strong> into the configuration template. A client secret is not needed.</li>
+</ol>
+<p><a class="button" href="/drive-config.example.json" download="google-drive.json">Download configuration template</a></p>
+<h2>Save the configuration</h2>
+<p><strong>Windows:</strong> save the edited file as <code>data/google-drive.json</code> inside the Shoes folder.</p>
+<p><strong>Raspberry Pi:</strong> save it as <code>/var/lib/shoes/google-drive.json</code>. Make it readable by the app:</p>
+<pre>sudo chown shoes:shoes /var/lib/shoes/google-drive.json
+sudo chmod 600 /var/lib/shoes/google-drive.json</pre>
+<p>Close and reopen the Drive picker after saving. The app reads this file each time you open the picker.</p>
+<h2>Pi network access</h2>
+<p>Google sign-in needs an approved HTTPS origin for normal network access. The default <code>http://raspberrypi.local:3000</code> address cannot use it. Set up HTTPS under a domain you control, register that exact origin with Google, add it to <code>SHOES_ORIGINS</code>, and preserve the Host header through your proxy.</p>
+<p>For testing without HTTPS, use an SSH tunnel to the Pi and open the app as localhost. See GOOGLE_DRIVE_SETUP.md in the ZIP for commands.</p>
+<p class="small">The browser-visible API key identifies your app; keep its website and API restrictions in place. OAuth tokens stay in the picker window's memory and are not saved in this configuration or sent to the shoe server. The Google scope permits access to files selected through this app; this implementation only downloads them.</p>
+<p><a href="https://developers.google.com/workspace/drive/picker/guides/web-picker" target="_blank" rel="noopener noreferrer">Google's official Picker setup guide</a></p>
+</main></body></html>
